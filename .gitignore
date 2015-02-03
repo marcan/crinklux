@@ -1,0 +1,8 @@
+demo
+demo.clean
+demo.debug
+demo.lzma
+demo.raw.elf
+*.o
+symbols.S
+symbols.dbg.S

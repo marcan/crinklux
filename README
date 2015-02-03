@@ -1,0 +1,8 @@
+A linker script hack to make small 4k demos on Linux, using dynamic loading
+of libraries to avoid the ELF dynamic linking overhead, and hand-crafted ELF
+headers to minimize bloat.
+
+A basic "draw a triangle on the screen" GLUT demo is about 1k or so.
+
+This is old stuff that I never really did anything with, and surely there are
+better toolkits out there by now.

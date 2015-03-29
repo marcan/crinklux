@@ -14,7 +14,7 @@ ASFLATS =
 all : $(TARGET) $(TARGET).debug
 
 $(TARGET) : $(TARGET).clean hdr
-	lzma --best -c - < $(TARGET).clean > $(TARGET).lzma
+	xz --format=lzma --lzma1=preset=9e,lc=1,lp=0,pb=0 -c - < $(TARGET).clean > $(TARGET).lzma
 	echo >> $(TARGET).lzma
 	cat hdr > $(TARGET)
 	tac < $(TARGET).lzma >> $(TARGET)

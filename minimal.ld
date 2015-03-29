@@ -39,19 +39,9 @@ SECTIONS
 		LONG(_text - _base);
 		LONG(_text);
 		LONG(_text);
-		LONG(_text_end - _text);
-		LONG(_text_end - _text);
-		LONG(5);
-		LONG(4);
-		
-		/* data */
-		LONG(1);
-		LONG(_data - _base);
-		LONG(_data);
-		LONG(_data);
-		LONG(_data_end - _data);
-		LONG(_bss_end - _data);
-		LONG(6);
+		LONG(_data_end - _text);
+		LONG(_bss_end - _text);
+		LONG(7);
 		LONG(4);
 		
 		/* interpreter */

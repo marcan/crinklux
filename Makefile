@@ -1,15 +1,16 @@
 
 TARGET = demo
 
-OBJECTS = main.o functions.o symbols.o
-OBJECTS_DBG = $(patsubst %.o,%.dbg.o,$(OBJECTS))
+SOURCES = functions.c main.c
+SOURCES_REL = start.S symbols.S
+SOURCES_DBG = start.S symbols.dbg.S
+HEADERS = gl.h glu.h glut.h
 
 GCCFLAGS = -m32
-CFLAGS = -Os -Wall -fno-stack-protector -fno-builtin-printf -fno-builtin-puts -fno-pic
+CFLAGS = -Os -Wall -fomit-frame-pointer -fno-stack-protector -fno-builtin-printf -fno-builtin-puts -fno-pic -ffast-math -fwhole-program -march=pentium4
 LDFLAGS = -nostartfiles -nostdlib 
 DBGFLAGS = -ldl -Wl,-T,debug.ld
 MINIFLAGS = -Wl,-T,minimal.ld,-z,noexecstack
-ASFLATS = 
 
 all : $(TARGET) $(TARGET).debug
 
@@ -24,25 +25,16 @@ $(TARGET).clean : $(TARGET).raw.elf
 	objcopy -O binary $< $@
 	[ -e /usr/sbin/paxctl-ng ] && /usr/sbin/paxctl-ng -lpemrs $@
 
-$(TARGET).raw.elf : $(OBJECTS) start.o Makefile minimal.ld
-	gcc $(GCCFLAGS) -o $@ $(OBJECTS) start.o $(LDFLAGS) $(MINIFLAGS)
+$(TARGET).raw.elf : $(SOURCES_REL) Makefile minimal.ld $(HEADERS)
+	cat $(SOURCES) | gcc $(GCCFLAGS) -o $@ $(SOURCES_REL) $(CFLAGS) $(LDFLAGS) $(MINIFLAGS) -xc -
 
-$(TARGET).debug : $(OBJECTS_DBG) start.o Makefile debug.ld
-	gcc $(GCCFLAGS) -o $@ $(OBJECTS_DBG) start.o $(LDFLAGS) $(DBGFLAGS)
+$(TARGET).debug : $(SOURCES_DBG) Makefile debug.ld $(HEADERS)
+	cat $(SOURCES) | gcc $(GCCFLAGS) -o $@ -DDEBUG $(SOURCES_DBG) $(CFLAGS) $(LDFLAGS) $(DBGFLAGS) -xc -
 
 symbols.S : symbols.txt symproc.py Makefile
 	python symproc.py symbols.txt > symbols.S
 symbols.dbg.S : symbols.txt symproc.py Makefile
 	python symproc.py -d symbols.txt > symbols.dbg.S
-
-%.dbg.o: %.c gl.h glu.h glut.h Makefile
-	gcc -c -DDEBUG $(GCCFLAGS) $(CFLAGS) -o $@ $<
-
-%.o: %.c gl.h glu.h glut.h Makefile
-	gcc -c $(GCCFLAGS) $(CFLAGS) -o $@ $<
-
-%.o: %.S Makefile
-	gcc -c $(GCCFLAGS) -o $@ $< $(ASFLAGS)
 
 clean:
 	rm -f *.o $(TARGET).raw.elf $(TARGET).clean $(TARGET) $(TARGET).debug *.lzma *.bz2 symbols.S symbols.dbg.S

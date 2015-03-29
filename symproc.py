@@ -3,10 +3,10 @@
 import os, sys
 
 if sys.argv[1] == "-d":
-	debug = False
+	debug = True
 	fin = open(sys.argv[2],"r")
 else:
-	debug = True
+	debug = False
 	fin = open(sys.argv[1],"r")
 
 data = []
@@ -25,9 +25,14 @@ for l in fin:
 		data.append(arg)
 		symbols.append(arg)
 
-if debug:
-	symbols += ["printf", "puts"]
-	data += ["libc.so.6", "printf", "puts"]
+if debug and ("printf" not in symbols or "puts" not in symbols):
+    data.append("libc.so.6")
+    if "printf" not in symbols:
+        data.append("printf")
+        symbols.append("printf")
+    if "puts" not in symbols:
+        data.append("pruts")
+        symbols.append("puts")
 
 print '.section .bss.dlsyms,"a",@nobits'
 print ".align 4"

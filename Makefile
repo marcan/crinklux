@@ -33,7 +33,7 @@ $(TARGET).debug : $(OBJECTS_DBG) start.o Makefile debug.ld
 symbols.S : symbols.txt symproc.py Makefile
 	python symproc.py symbols.txt > symbols.S
 symbols.dbg.S : symbols.txt symproc.py Makefile
-	python -d symproc.py symbols.txt > symbols.dbg.S
+	python symproc.py -d symbols.txt > symbols.dbg.S
 
 %.dbg.o: %.c gl.h glu.h glut.h Makefile
 	gcc -c -DDEBUG $(GCCFLAGS) $(CFLAGS) -o $@ $<

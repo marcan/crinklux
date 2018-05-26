@@ -126,16 +126,18 @@ SECTIONS
 		_string_end = .;
 		
 	}
-  .interp         : { *(.interp) }
-  .note.gnu.build-id : { *(.note.gnu.build-id) }
-  .hash           : { *(.hash) }
-  .gnu.hash       : { *(.gnu.hash) }
-  .dynsym         : { *(.dynsym) }
-  .dynstr         : { *(.dynstr) }
-  .gnu.version    : { *(.gnu.version) }
-  .gnu.version_d  : { *(.gnu.version_d) }
-  .gnu.version_r  : { *(.gnu.version_r) }
-  .rel.dyn        :
+  /DISCARD/       : { *(.interp) }
+  /DISCARD/       : { *(.note.gnu.build-id) }
+  /DISCARD/       : { *(.hash) }
+  /DISCARD/       : { *(.gnu.hash) }
+  /DISCARD/       : { *(.dynsym) }
+  /DISCARD/       : { *(.dynstr) }
+  /DISCARD/       : { *(.gnu.version) }
+  /DISCARD/       : { *(.gnu.version_d) }
+  /DISCARD/       : { *(.gnu.version_r) }
+  .dlmeta         : { *(.dlmeta) }
+  /DISCARD/       : { *(.dynamic) }
+  /DISCARD/       :
     {
       *(.rel.init)
       *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
@@ -181,8 +183,8 @@ SECTIONS
   _data = .;
   .rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) }
   .rodata1        : { *(.rodata1) }
-  .eh_frame_hdr : { *(.eh_frame_hdr) }
-  .eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
+  /DISCARD/       : { *(.eh_frame_hdr) }
+  /DISCARD/       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
   /* Adjust the address for the data segment.  We want to adjust up to
      the same address within the page on the next page up.  */
   /* Thread Local Storage sections  */
